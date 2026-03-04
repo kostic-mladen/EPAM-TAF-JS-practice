@@ -1,4 +1,4 @@
-# EPAM Unit Testing — JavaScript
+# EPAM Test Automation Framework practice
 
 A learning project for setting up JavaScript testing frameworks covering **unit tests** (Mocha + Chai + c8) and **end-to-end tests** (WebdriverIO).
 
@@ -10,6 +10,10 @@ Learn how to set up and configure a professional JavaScript testing environment 
 - Clean Git workflow with conventional commits
 
 ## Changelog
+
+### `feature/advanced-wdio-commands`
+- Added `advanced-commands.spec.js` — E2E test suite for advanced WebdriverIO commands (`execute()`, `executeAsync()`, `waitUntil()`, `setCookies()`, `getCookies()`, `deleteCookies()`, `getAttribute()`, `getProperty()`)
+- Added `"advanced"` npm script — runs only advanced-commands tests
 
 ### `feature/wdio-basic-commands`
 - Added `basic-commands.spec.js` — E2E test suite for basic WebdriverIO commands (`$`, `$$`, `click()`, `setValue()`, `addValue()`, `isDisplayed()`, `isExisting()`, `waitForDisplayed()`, `waitForExist()`) on `practicetestautomation.com/practice-test-login/`
@@ -43,7 +47,8 @@ epam-unit-testing/
 │   │   └── isNumberEven.spec.js      # Unit tests for isNumberEven method
 │   └── e2e-tests/
 │       ├── home-page.spec.js         # E2E test — EPAM homepage title validation
-│       └── basic-commands.spec.js    # E2E test — basic WDIO commands on practice login page
+│       ├── basic-commands.spec.js    # E2E test — basic WDIO commands on practice login page
+│       └── advanced-commands.spec.js # E2E test — advanced WDIO commands
 ├── .eslintignore
 ├── .eslintrc.json                    # ESLint config (airbnb-base)
 ├── .mocharc.json                     # Mocha config
@@ -110,6 +115,7 @@ This runs in sequence:
 npm run wdio       # all E2E tests
 npm run epam       # only home-page tests
 npm run commands   # only basic-commands tests
+npm run advanced   # only advanced-commands tests
 ```
 
 ### Run everything (unit + E2E)
@@ -136,6 +142,7 @@ npm run lint
 |---|---|---|
 | `test/e2e-tests/home-page.spec.js` | first e2e test suite | Validates the title of `https://www.epam.com` |
 | `test/e2e-tests/basic-commands.spec.js` | basic commands test suite | Demonstrates `$`, `$$`, `click()`, `setValue()`, `addValue()`, `isDisplayed()`, `isExisting()`, `waitForDisplayed()`, `waitForExist()` on practice login page |
+| `test/e2e-tests/advanced-commands.spec.js` | advanced commands test suite | Demonstrates `execute()`, `executeAsync()`, `waitUntil()`, `setCookies()`, `getCookies()`, `deleteCookies()`, `getAttribute()`, `getProperty()` |
 
 ## E2E Configuration — `wdio.conf.js`
 
