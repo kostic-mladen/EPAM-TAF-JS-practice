@@ -21,12 +21,6 @@ Learn how to set up and configure a professional JavaScript testing environment 
 - Added `"test:all"` npm script — runs unit tests then E2E tests sequentially
 - Updated `baseUrl` in `wdio.conf.js` to `https://practicetestautomation.com`
 
-### `feature/wdio-basic-commands`
-- Added `basic-commands.spec.js` — E2E test suite for basic WebdriverIO commands (`$`, `$$`, `click()`, `setValue()`, `addValue()`, `isDisplayed()`, `isExisting()`, `waitForDisplayed()`, `waitForExist()`) on `practicetestautomation.com/practice-test-login/`
-- Added `"wdio"` npm script — runs all E2E tests (`wdio run ./wdio.conf.js`)
-- Added `"test:all"` npm script — runs unit tests then E2E tests sequentially
-- Updated `baseUrl` in `wdio.conf.js` to `https://practicetestautomation.com`
-
 ### `test/first-e2e-test`
 - Added first E2E test — validates the title of `https://www.epam.com`
 - Configured `wdio.conf.js`: set `baseUrl` and `specs` path
