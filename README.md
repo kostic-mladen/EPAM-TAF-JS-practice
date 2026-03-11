@@ -11,6 +11,13 @@ Learn how to set up and configure a professional JavaScript testing environment 
 
 ## Changelog
 
+### `feature/allure-report`
+- Integrated **Allure** reporting: installed `allure-commandline` and `@wdio/allure-reporter`
+- Configured Allure reporter in `wdio.conf.js` — results written to `allure-results/`
+- Added `onComplete` hook — auto-generates the Allure HTML report to `allure-report/` after every test run
+- Added `allure:open` npm script — serves and opens the report in the browser
+- Added `allure-report/` and `allure-results/` to `.eslintignore` to prevent linting generated files
+
 ### `chore/capabilities-hooks-screenshots`
 - Updated `capabilities` in `wdio.conf.js` to run tests in both **Chrome** and **Firefox** simultaneously
 - Added `afterTest` hook — automatically captures a screenshot on test failure and saves it to `artifacts/screenshots/<test-title>.png`
@@ -94,6 +101,8 @@ epam-unit-testing/
 | [@wdio/local-runner](https://webdriver.io/docs/runner) | Runs tests locally |
 | [@wdio/mocha-framework](https://webdriver.io/docs/frameworks) | Mocha integration for WDIO |
 | [@wdio/spec-reporter](https://webdriver.io/docs/spec-reporter) | Terminal spec reporter |
+| [@wdio/allure-reporter](https://webdriver.io/docs/allure-reporter) | Allure results writer |
+| [allure-commandline](https://github.com/allure-framework/allure2) | Generates and serves Allure HTML report |
 | [eslint-plugin-wdio](https://github.com/webdriverio/eslint-plugin-wdio) | ESLint rules + globals for WDIO |
 
 ## Getting Started
@@ -118,11 +127,19 @@ This runs in sequence:
 ### Run E2E tests only
 
 ```bash
-npm run wdio       # all E2E tests
+npm run wdio       # all E2E tests (auto-generates Allure report on completion)
 npm run epam       # only home-page tests
-npm run basic   # only basic-commands tests
-npm run advanced   # only advanced-comands tests
+npm run basic      # only basic-commands tests
+npm run advanced   # only advanced-commands tests
 ```
+
+### View Allure report
+
+```bash
+npm run allure:open
+```
+
+The Allure HTML report is auto-generated after every `wdio` run. Use this command to open it in the browser.
 
 ### Run everything (unit + E2E)
 
@@ -157,7 +174,7 @@ npm run lint
 | Browsers | Chrome, Firefox (run in parallel) |
 | Base URL | `https://practicetestautomation.com` |
 | Framework | Mocha |
-| Reporter | spec |
+| Reporters | spec, Allure |
 | Spec pattern | `test/e2e-tests/**/*.spec.js` |
 | `maxInstances` | 10 |
 | `waitforTimeout` | 10 000 ms |
@@ -170,6 +187,7 @@ npm run lint
 | Hook | Behaviour |
 |---|---|
 | `afterTest` | If a test fails, saves a screenshot to `artifacts/screenshots/<test-title>.png` and logs the filename to the console. The directory is created automatically if it doesn't exist. |
+| `onComplete` | After all tests finish, auto-generates the Allure HTML report from `allure-results/` into `allure-report/`. |
 
 ## Coverage Configuration — `c8rc.json`
 
@@ -192,5 +210,5 @@ Coverage reports are generated in `coverage/` and printed to the terminal.
 
 - Extends **airbnb-base**
 - Environment: CommonJS, ES2021, Mocha
-- `wdio.conf.js` excluded from linting via `.eslintignore`
+- `wdio.conf.js`, `allure-report/`, and `allure-results/` excluded from linting via `.eslintignore`
 - E2E test files use an `overrides` block extending `plugin:wdio/recommended`, which declares all WDIO globals (`browser`, `$`, `$$`, `expect`, etc.)

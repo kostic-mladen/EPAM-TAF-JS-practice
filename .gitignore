@@ -2,3 +2,5 @@ node_modules
 coverage
 mochawesome-report
 /screenshots/
+allure-report
+allure-results
