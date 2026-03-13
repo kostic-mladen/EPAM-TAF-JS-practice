@@ -28,7 +28,8 @@
     "wdio:bdd": "wdio run ./configs/wdio.cucumber.conf.js",
     "wdio:bdd:smoke": "cross-env TAGS=@smoke wdio run ./configs/wdio.cucumber.conf.js",
     "wdio:bdd:regression": "cross-env TAGS=@regression wdio run ./configs/wdio.cucumber.conf.js",
-    "test:all:bdd": "npm test && npm run wdio:bdd"
+    "test:all:bdd": "npm test && npm run wdio:bdd",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.7.0",
@@ -43,10 +44,11 @@
     "chai": "^4.5.0",
     "cross-env": "^10.1.0",
     "eslint": "^8.57.1",
-    "glob": "^7.2.3",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-wdio": "^9.23.0",
+    "glob": "^7.2.3",
+    "husky": "^9.1.7",
     "mocha": "^11.7.5",
     "mochawesome": "^7.1.4"
   }
