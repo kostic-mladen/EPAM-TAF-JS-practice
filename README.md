@@ -57,6 +57,9 @@ epam-taf-js-practice/
 ├── .husky/
 │   ├── pre-commit                    # Runs lint before every commit
 │   └── pre-push                      # Runs unit tests + coverage before every push
+├── .github/
+│   └── workflows/
+│       └── ci.yml                    # GitHub Actions CI pipeline
 ├── .gitignore
 ├── package.json
 └── README.md
@@ -150,6 +153,12 @@ Represents `https://www.epam.com`.
 | [@cucumber/cucumber](https://github.com/cucumber/cucumber-js) | Cucumber.js core |
 | [cross-env](https://github.com/kentcdodds/cross-env) | Cross-platform env variables (tag filtering) |
 
+### CI/CD
+
+| Tool | Purpose |
+|---|---|
+| [GitHub Actions](https://github.com/features/actions) | Cloud CI pipeline — lint, unit tests, BDD tests on every push/PR |
+
 ---
 
 ## Getting Started
@@ -216,6 +225,37 @@ npm run test:only
 ```
 
 Runs Mocha unit tests + coverage report, skipping the ESLint `pretest` step.
+
+---
+
+## CI/CD — GitHub Actions
+
+The pipeline is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) and runs automatically on every **push** and **pull request** to `master`.
+
+### What runs
+
+| Step | Command | Purpose |
+|---|---|---|
+| Lint | `npm run lint` | ESLint — fails fast on code style errors |
+| Unit tests + coverage | part of `test:all:bdd` | Mocha + c8 coverage with thresholds |
+| BDD tests | part of `test:all:bdd` | Cucumber scenarios in Chrome + Firefox (headless) |
+
+### Artifacts uploaded after every run
+
+| Artifact | Path | Contents |
+|---|---|---|
+| `coverage-report` | `reports/coverage/` | c8 HTML coverage report |
+| `allure-results` | `reports/allure-results/` | Raw Allure test results |
+| `screenshots` | `reports/screenshots/` | Failure screenshots from BDD scenarios |
+
+### Environment
+
+| Setting | Value | Reason |
+|---|---|---|
+| Runner | `ubuntu-latest` | Cheapest runner (1× cost), Chrome pre-installed |
+| Node.js | 20 | LTS — matches local dev |
+| `CI=true` | set in workflow `env` | Triggers headless mode in `wdio.cucumber.conf.js` |
+| Firefox | installed via `apt-get` | Not pre-installed on ubuntu-latest, required for parallel browser testing |
 
 ---
 
@@ -334,6 +374,14 @@ E2E specs are excluded because they require the WDIO runtime (`browser` global).
 ---
 
 ## Changelog
+
+### `feature/github-actions`
+- Added `.github/workflows/ci.yml` — GitHub Actions CI pipeline
+- Pipeline runs on every push and PR to `master`
+- Steps: lint → unit tests + coverage + BDD tests (`npm run test:all:bdd`)
+- `CI=true` env var enables headless Chrome and Firefox in `wdio.cucumber.conf.js`
+- Firefox installed via `apt-get` (Chrome is pre-installed on `ubuntu-latest`)
+- Artifacts uploaded after every run: coverage report, Allure results, failure screenshots
 
 ### `chore/husky-git-hooks`
 - Added Husky v9 for Git hook management
