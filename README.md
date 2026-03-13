@@ -192,9 +192,10 @@ npm run advanced   # only advanced-commands tests
 ### Run BDD tests (Cucumber)
 
 ```bash
-npm run wdio:bdd             # all feature files (Chrome + Firefox)
-npm run wdio:bdd:smoke       # only @smoke scenarios
-npm run wdio:bdd:regression  # only @regression scenarios
+npm run wdio:bdd             # all feature files, headless (Chrome + Firefox, parallel)
+npm run wdio:bdd:smoke       # only @smoke scenarios, headless
+npm run wdio:bdd:regression  # only @regression scenarios, headless
+npm run wdio:bdd:headed      # all feature files, visible browser (includes @no-headless tests)
 ```
 
 ### Run everything
@@ -254,7 +255,7 @@ The pipeline is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml
 |---|---|---|
 | Runner | `ubuntu-latest` | Cheapest runner (1× cost), Chrome pre-installed |
 | Node.js | 20 | LTS — matches local dev |
-| `CI=true` | set in workflow `env` | Triggers headless mode in `wdio.cucumber.conf.js` |
+| `CI=true` | set in workflow `env` | Available for workflow logic; headless is now on by default |
 | Firefox | installed via `apt-get` | Not pre-installed on ubuntu-latest, required for parallel browser testing |
 
 ---
@@ -281,7 +282,7 @@ git push --no-verify
 | Feature file | Scenarios | Tags |
 |---|---|---|
 | `test/features/login.feature` | Successful login, invalid username, invalid password | `@smoke`, `@regression`, `@negative` |
-| `test/features/epam-home.feature` | EPAM homepage title validation | `@smoke` |
+| `test/features/epam-home.feature` | EPAM homepage title validation | `@smoke`, `@no-headless` |
 | `test/features/browser-basic.feature` | Element queries, clicks, setValue, addValue, waiting | `@smoke`, `@regression` |
 | `test/features/browser-advanced.feature` | JS execution, cookies, attributes, properties | `@regression` |
 
@@ -296,18 +297,21 @@ git push --no-verify
 | `@epam-home` | EPAM homepage scenarios |
 | `@browser-basic` | Basic browser command scenarios |
 | `@browser-advanced` | Advanced browser command scenarios |
+| `@no-headless` | Skipped in headless mode — requires a real browser (e.g. epam.com blocks bots) |
 
 ### Cucumber configuration — `configs/wdio.cucumber.conf.js`
 
 | Option | Value |
 |---|---|
 | Browsers | Chrome, Firefox (parallel) |
-| `maxInstances` | 2 |
+| `maxInstances` (global) | 4 |
+| `maxInstances` (per browser) | 2 |
 | Base URL | `https://practicetestautomation.com` |
 | Reporter | spec + Allure (`useCucumberStepReporter: true`) |
 | Clean results before run | `onPrepare` hook — deletes `reports/allure-results/` so every run starts fresh |
 | Screenshot on failure | `afterScenario` hook — saves to `reports/screenshots/` and attaches to Allure |
-| CI headless | Set `CI=true` env variable |
+| Headless (default) | On by default; disable with `HEADLESS=false` |
+| Window maximize | `before` hook — maximizes window when `HEADLESS=false` |
 
 ---
 
@@ -374,6 +378,14 @@ E2E specs are excluded because they require the WDIO runtime (`browser` global).
 ---
 
 ## Changelog
+
+### `chore/headless-parallel`
+- Headless mode is now **on by default** for local and CI runs — no longer requires `CI=true`
+- Disable with `HEADLESS=false` (e.g. `npm run wdio:bdd:headed`) to run with a visible browser
+- Added `before` hook — maximizes window automatically when running headed
+- Added `@no-headless` tag — scenarios tagged with it are skipped in headless mode (e.g. `epam-home.feature` which is blocked by Cloudflare bot protection)
+- Added `wdio:bdd:headed` npm script — runs all BDD tests headed (includes `@no-headless` scenarios)
+- Increased parallel execution: global `maxInstances: 4`, per-browser `maxInstances: 2` (2 Chrome + 2 Firefox simultaneously)
 
 ### `feature/github-actions`
 - Added `.github/workflows/ci.yml` — GitHub Actions CI pipeline

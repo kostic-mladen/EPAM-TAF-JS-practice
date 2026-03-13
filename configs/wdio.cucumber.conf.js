@@ -16,18 +16,22 @@ exports.config = {
   capabilities: [
     {
       browserName: 'chrome',
+      maxInstances: 2,
       'goog:chromeOptions': {
-        args: process.env.CI ? ['--headless', '--no-sandbox', '--disable-gpu'] : [],
+        args: process.env.HEADLESS !== 'false'
+          ? ['--headless', '--no-sandbox', '--disable-gpu']
+          : [],
       },
     },
     {
       browserName: 'firefox',
+      maxInstances: 2,
       'moz:firefoxOptions': {
-        args: process.env.CI ? ['-headless'] : [],
+        args: process.env.HEADLESS !== 'false' ? ['-headless'] : [],
       },
     },
   ],
-  maxInstances: 2,
+  maxInstances: 4,
   logLevel: 'error',
   bail: 0,
   baseUrl: 'https://practicetestautomation.com',
@@ -57,9 +61,17 @@ exports.config = {
     snippets: true,
     source: true,
     strict: false,
-    tagExpression: process.env.TAGS || '',
+    tagExpression: [
+      process.env.TAGS,
+      process.env.HEADLESS !== 'false' ? 'not @no-headless' : '',
+    ].filter(Boolean).join(' and ') || '',
     timeout: 60000,
     ignoreUndefinedDefinitions: false,
+  },
+  async before() {
+    if (process.env.HEADLESS === 'false') {
+      await browser.maximizeWindow();
+    }
   },
   onPrepare() {
     const allureResultsDir = 'reports/allure-results';

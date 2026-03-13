@@ -1,4 +1,4 @@
-@epam-home @smoke
+@epam-home @smoke @no-headless
 Feature: EPAM Home Page
   As a visitor
   I want to open the EPAM corporate website

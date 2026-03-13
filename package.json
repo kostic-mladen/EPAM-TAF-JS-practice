@@ -30,7 +30,8 @@
     "wdio:bdd:smoke": "cross-env TAGS=@smoke wdio run ./configs/wdio.cucumber.conf.js",
     "wdio:bdd:regression": "cross-env TAGS=@regression wdio run ./configs/wdio.cucumber.conf.js",
     "test:all:bdd": "npm test && npm run wdio:bdd",
-    "prepare": "husky"
+    "prepare": "husky",
+    "wdio:bdd:headed": "cross-env HEADLESS=false wdio run ./configs/wdio.cucumber.conf.js"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.7.0",
