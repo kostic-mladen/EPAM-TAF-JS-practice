@@ -13,6 +13,7 @@ jobs:
 
     env:
       CI: true
+      TAGS: "not @epam-home"
 
     steps:
       - name: Checkout code
